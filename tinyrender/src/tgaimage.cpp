@@ -20,7 +20,7 @@ bool TGAImage::read_tga_file(const std::string filename) {
   }
   w = header.width;
   h = header.height;
-  bpp = header.bitsperpixel >> 3;
+  bpp = header.bitsperpixel >> 3; // divide by 8
   if (w <= 0 || h <= 0 || (bpp != GRAYSCALE && bpp != RGB && bpp != RGBA)) {
     std::cerr << "bad bpp (or width/height) value\n";
     return false;
@@ -42,9 +42,9 @@ bool TGAImage::read_tga_file(const std::string filename) {
     std::cerr << "unknown file format " << (int)header.datatypecode << "\n";
     return false;
   }
-  if (!(header.imagedescriptor & 0x20))
+  if (!(header.imagedescriptor & 0x20)) // 0x20 == 00100000
     flip_vertically();
-  if (header.imagedescriptor & 0x10)
+  if (header.imagedescriptor & 0x10) // 0x10 == 00010000
     flip_horizontally();
   std::cerr << w << "x" << h << "/" << bpp * 8 << "\n";
   return true;
